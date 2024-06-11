@@ -1,13 +1,20 @@
 document
   .getElementById("wordInput")
-  .addEventListener("input", function (event) {
-    const input = event.target.value.toUpperCase();
-    if (input.length === 5) {
-      // Assuming you want to fill the first row for demonstration
-      const cells = document.querySelectorAll(".row:first-child .cell");
-      cells.forEach((cell, index) => {
-        cell.textContent = input[index];
-      });
-      event.target.value = ""; // Clear input after filling the cells
+  .addEventListener("keyup", function (event) {
+    console.log("Event triggered", event.key); // Log the key that was pressed
+    if (event.key === "Enter") {
+      // Check if the Enter key was pressed
+      const input = event.target.value.toUpperCase();
+      console.log("Input received:", input); // Log the transformed input
+      if (input.length === 5) {
+        console.log("Correct input length"); // Confirm input length is 5
+        const cells = document.querySelectorAll(".row:first-child .cell");
+        console.log("Cells selected:", cells.length); // Log the number of cells selected
+        cells.forEach((cell, index) => {
+          cell.textContent = input[index];
+          console.log(`Cell ${index} set to:`, cell.textContent); // Log each cell's content
+        });
+        event.target.value = ""; // Clear input after filling the cells
+      }
     }
   });
