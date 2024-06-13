@@ -13,7 +13,7 @@ document
         console.log("Cells selected:", cells.length); // Log the number of cells selected
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
-          console.log(`Cell ${index} set to:`, cell.textContent); // Log each cell's content
+        //   console.log(`Cell ${index} set to:`, cell.textContent); // Log each cell's content
         });
         event.target.value = ""; // Clear input after filling the cells
 
