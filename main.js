@@ -1,7 +1,7 @@
 document
   .getElementById("wordInput")
   .addEventListener("keyup", function (event) {
-    console.log("Event triggered", event.key); // Log the key that was pressed
+    // console.log("Event triggered", event.key); // Log the key that was pressed
     if (event.key === "Enter") {
       // Check if the Enter key was pressed
       const input = event.target.value.toUpperCase();
