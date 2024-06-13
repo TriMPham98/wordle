@@ -9,7 +9,6 @@ document
       const input = event.target.value.toUpperCase();
       if (/^[A-Z]{5}$/.test(input)) { // Check if input contains exactly 5 letters
         const cells = document.querySelectorAll(".first-row .cell");
-        console.log("Cells selected:", cells.length); // Log the number of cells selected
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
         //   console.log(`Cell ${index} set to:`, cell.textContent); // Log each cell's content
