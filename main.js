@@ -5,7 +5,6 @@ document
     if (event.key === "Enter") {
       // Check if the Enter key was pressed
       const input = event.target.value.toUpperCase();
-      console.log("Input received:", input); // Log the transformed input
       if (input.length === 5) {
         console.log("Correct input length"); // Confirm input length is 5
         const cells = document.querySelectorAll(".first-row .cell");
