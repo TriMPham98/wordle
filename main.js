@@ -1,5 +1,7 @@
 const TEST_WORD = "HELLO"; // Define a test word
 
+let currentGuess = 0; // Track the current guess number
+
 document
   .getElementById("wordInput")
   .addEventListener("keyup", function (event) {
@@ -8,7 +10,7 @@ document
       // Check if the Enter key was pressed
       const input = event.target.value.toUpperCase();
       if (/^[A-Z]{5}$/.test(input)) { // Check if input contains exactly 5 letters
-        const cells = document.querySelectorAll(".first-row .cell");
+        const cells = document.querySelectorAll(`.row:nth-child(${currentGuess}) .cell`);
         const letterCount = {};
         TEST_WORD.split('').forEach(char => {
           letterCount[char] = (letterCount[char] || 0) + 1;
@@ -32,8 +34,14 @@ document
         // Compare input with the test word
         if (input === TEST_WORD) {
           console.log("Correct! The word matches the test word.");
+          // Reset or end game logic here
         } else {
           console.log("Incorrect. Try again.");
+          currentGuess++; // Move to the next guess
+          if (currentGuess > 1) {
+            console.log("No more guesses left.");
+            // Handle end of game, e.g., reveal word, disable input
+          }
         }
       } else {
         console.log("Invalid input. Please enter only letters.");
