@@ -8,7 +8,7 @@ document
       console.log("Input received:", input); // Log the transformed input
       if (input.length === 5) {
         console.log("Correct input length"); // Confirm input length is 5
-        const cells = document.querySelectorAll(".row:first-child .cell");
+        const cells = document.querySelectorAll(".first-row .cell");
         console.log("Cells selected:", cells.length); // Log the number of cells selected
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
