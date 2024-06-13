@@ -11,7 +11,11 @@ document
         const cells = document.querySelectorAll(".first-row .cell");
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
-        //   console.log(`Cell ${index} set to:`, cell.textContent); // Log each cell's content
+          if (input[index] === TEST_WORD[index]) {
+            cell.style.backgroundColor = 'green'; // Correct position
+          } else if (TEST_WORD.includes(input[index])) {
+            cell.style.backgroundColor = 'yellow'; // Correct letter, wrong position
+          }
         });
         event.target.value = ""; // Clear input after filling the cells
 
@@ -23,7 +27,7 @@ document
         }
       } else {
         console.log("Invalid input. Please enter only letters.");
-        event.target.value = ""; // Optionally clear the input field if invalid
+        event.target.value = ""; // Clear the input field if invalid
       }
     }
   });
