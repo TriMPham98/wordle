@@ -15,6 +15,8 @@ document
             cell.style.backgroundColor = 'green'; // Correct position
           } else if (TEST_WORD.includes(input[index])) {
             cell.style.backgroundColor = 'yellow'; // Correct letter, wrong position
+          } else {
+            cell.style.backgroundColor = ''; // Default background
           }
         });
         event.target.value = ""; // Clear input after filling the cells
