@@ -7,7 +7,7 @@ document
     if (event.key === "Enter") {
       // Check if the Enter key was pressed
       const input = event.target.value.toUpperCase();
-      if (input.length === 5) {
+      if (/^[A-Z]{5}$/.test(input)) { // Check if input contains exactly 5 letters
         console.log("Correct input length"); // Confirm input length is 5
         const cells = document.querySelectorAll(".first-row .cell");
         console.log("Cells selected:", cells.length); // Log the number of cells selected
@@ -23,6 +23,9 @@ document
         } else {
           console.log("Incorrect. Try again.");
         }
+      } else {
+        console.log("Invalid input. Please enter only letters.");
+        event.target.value = ""; // Optionally clear the input field if invalid
       }
     }
   });
