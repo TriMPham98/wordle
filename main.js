@@ -9,14 +9,22 @@ document
       const input = event.target.value.toUpperCase();
       if (/^[A-Z]{5}$/.test(input)) { // Check if input contains exactly 5 letters
         const cells = document.querySelectorAll(".first-row .cell");
+        const letterCount = {};
+        TEST_WORD.split('').forEach(char => {
+          letterCount[char] = (letterCount[char] || 0) + 1;
+        });
+
+        const usedLetters = {};
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
           if (input[index] === TEST_WORD[index]) {
-            cell.style.backgroundColor = 'green'; // Correct position
-          } else if (TEST_WORD.includes(input[index])) {
-            cell.style.backgroundColor = 'yellow'; // Correct letter, wrong position
+            cell.style.backgroundColor = 'green';
+            letterCount[input[index]]--;
+          } else if (TEST_WORD.includes(input[index]) && (usedLetters[input[index]] || 0) < letterCount[input[index]]) {
+            cell.style.backgroundColor = 'yellow';
+            usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
           } else {
-            cell.style.backgroundColor = ''; // Default background
+            cell.style.backgroundColor = '';
           }
         });
         event.target.value = ""; // Clear input after filling the cells
