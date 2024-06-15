@@ -10,7 +10,11 @@ document
       const input = event.target.value.toUpperCase();
       if (/^[A-Z]{5}$/.test(input)) {
         // Check if input contains exactly 5 letters
-        const rowClass = `${['first', 'second', 'third', 'fourth', 'fifth'][currentGuess - 1]}-row`;
+        const rowClass = `${
+          ["first", "second", "third", "fourth", "fifth", "sixth"][
+            currentGuess - 1
+          ]
+        }-row`;
         const cells = document.querySelectorAll(`.${rowClass} .cell`);
 
         const letterCount = {};
