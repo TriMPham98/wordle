@@ -10,8 +10,8 @@ document
       const input = event.target.value.toUpperCase();
       if (/^[A-Z]{5}$/.test(input)) {
         // Check if input contains exactly 5 letters
-        const row = document.querySelectorAll(".row")[currentGuess - 1];
-        const cells = row.querySelectorAll(".cell");
+        const rowClass = `${['first', 'second', 'third', 'fourth', 'fifth'][currentGuess - 1]}-row`;
+        const cells = document.querySelectorAll(`.${rowClass} .cell`);
 
         const letterCount = {};
         TEST_WORD.split("").forEach((char) => {
