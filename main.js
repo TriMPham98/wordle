@@ -2,6 +2,10 @@ const TEST_WORD = "HELLO"; // Define a test word
 
 let currentGuess = 1; // Track the current guess number
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('wordInput').focus();
+});
+
 document
   .getElementById("wordInput")
   .addEventListener("keyup", function (event) {
