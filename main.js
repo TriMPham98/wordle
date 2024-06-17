@@ -47,6 +47,7 @@ document
         // Compare input with the test word
         if (input === TEST_WORD) {
           console.log("Correct! The word matches the test word.");
+          event.target.value = ""; // Clear input after correct guess
           // Reset or end game logic here
         } else {
           console.log("Incorrect. Try again.");
@@ -62,3 +63,4 @@ document
       }
     }
   });
+
