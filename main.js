@@ -2,8 +2,8 @@ const TEST_WORD = "HELLO"; // Define a test word
 
 let currentGuess = 1; // Track the current guess number
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('wordInput').focus();
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("wordInput").focus();
 });
 
 document
@@ -47,13 +47,14 @@ document
         // Compare input with the test word
         if (input === TEST_WORD) {
           console.log("Correct! The word matches the test word.");
-          document.getElementById('wordInput').style.display = 'none'; // Hide input field
+          document.getElementById("wordInput").style.display = "none"; // Hide input field
           event.target.value = ""; // Clear input after correct guess
           // Reset or end game logic here
         } else {
           console.log("Incorrect. Try again.");
           currentGuess++; // Move to the next guess
           if (currentGuess > 6) {
+            document.getElementById("wordInput").style.display = "none"; // Hide input field
             console.log("No more guesses left.");
             // Handle end of game, e.g., reveal word, disable input
           }
@@ -64,5 +65,3 @@ document
       }
     }
   });
-
-
