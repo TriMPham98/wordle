@@ -1,12 +1,14 @@
 let TEST_WORD; // Initialize TEST_WORD
 
-document.addEventListener('DOMContentLoaded', async function() {
-  const response = await fetch('words.txt');
+document.addEventListener("DOMContentLoaded", async function () {
+  const response = await fetch("words.txt");
   const data = await response.text();
-  const words = data.split('\n');
-  TEST_WORD = words[Math.floor(Math.random() * words.length)].trim();
+  const words = data.split("\n");
+  TEST_WORD = words[Math.floor(Math.random() * words.length)]
+    .trim()
+    .toUpperCase();
   console.log("Test Word:", TEST_WORD); // Log the test word to the console
-  document.getElementById('wordInput').focus();
+  document.getElementById("wordInput").focus();
 });
 
 let currentGuess = 1; // Track the current guess number
@@ -32,21 +34,32 @@ document
         });
 
         const usedLetters = {};
+
+        // First pass: check for exact matches
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
           if (input[index] === TEST_WORD[index]) {
             cell.style.backgroundColor = "green";
             letterCount[input[index]]--;
-          } else if (
-            TEST_WORD.includes(input[index]) &&
-            (usedLetters[input[index]] || 0) < letterCount[input[index]]
-          ) {
-            cell.style.backgroundColor = "yellow";
             usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
-          } else {
-            cell.style.backgroundColor = "";
           }
         });
+
+        // Second pass: check for partial matches
+        cells.forEach((cell, index) => {
+          if (cell.style.backgroundColor !== "green") {
+            if (
+              TEST_WORD.includes(input[index]) &&
+              (usedLetters[input[index]] || 0) < letterCount[input[index]]
+            ) {
+              cell.style.backgroundColor = "yellow";
+              usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
+            } else {
+              cell.style.backgroundColor = "";
+            }
+          }
+        });
+
         event.target.value = ""; // Clear input after filling the cells
 
         // Compare input with the test word
