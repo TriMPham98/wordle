@@ -1,10 +1,15 @@
-const TEST_WORD = "HELLO"; // Define a test word
+let TEST_WORD; // Initialize TEST_WORD
+
+document.addEventListener('DOMContentLoaded', async function() {
+  const response = await fetch('words.txt');
+  const data = await response.text();
+  const words = data.split('\n');
+  TEST_WORD = words[Math.floor(Math.random() * words.length)].trim();
+  console.log("Test Word:", TEST_WORD); // Log the test word to the console
+  document.getElementById('wordInput').focus();
+});
 
 let currentGuess = 1; // Track the current guess number
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("wordInput").focus();
-});
 
 document
   .getElementById("wordInput")
