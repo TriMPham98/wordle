@@ -79,27 +79,27 @@ document.addEventListener("keydown", function (event) {
         }
       });
 
-      // Second pass: check for partial matches (yellow) and incorrect (gray)
-      cells.forEach((cell, index) => {
-        if (cell.style.backgroundColor !== "green") {
-          setTimeout(() => {
-            cell.style.transform = "rotateX(360deg)";
-            if (
-              TEST_WORD.includes(input[index]) &&
-              (usedLetters[input[index]] || 0) < letterCount[input[index]]
-            ) {
-              cell.style.backgroundColor = "#d2b100";
-              usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
-            } else {
-              // cell.style.backgroundColor = "gray";
-            }
-          }, index * 150); // Adjust timing if needed
-        }
-      });
-
       if (input === TEST_WORD) {
         console.log("Correct! The word matches the test word.");
       } else {
+        // Second pass: check for partial matches (yellow) and incorrect (gray)
+        cells.forEach((cell, index) => {
+          if (cell.style.backgroundColor !== "green") {
+            setTimeout(() => {
+              cell.style.transform = "rotateX(360deg)";
+              if (
+                TEST_WORD.includes(input[index]) &&
+                (usedLetters[input[index]] || 0) < letterCount[input[index]]
+              ) {
+                cell.style.backgroundColor = "#d2b100";
+                usedLetters[input[index]] =
+                  (usedLetters[input[index]] || 0) + 1;
+              } else {
+                cell.style.backgroundColor = "gray";
+              }
+            }, index * 150); // Adjust timing if needed
+          }
+        });
         console.log("Incorrect. Try again.");
         currentGuess++; // Move to the next guess
         if (currentGuess > 6) {
