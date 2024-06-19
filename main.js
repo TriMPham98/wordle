@@ -88,7 +88,7 @@ document.addEventListener("keydown", function (event) {
               TEST_WORD.includes(input[index]) &&
               (usedLetters[input[index]] || 0) < letterCount[input[index]]
             ) {
-              cell.style.backgroundColor = "yellow";
+              cell.style.backgroundColor = "#d2b100";
               usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
             } else {
               // cell.style.backgroundColor = "gray";
