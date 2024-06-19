@@ -54,7 +54,10 @@ document
         cells.forEach((cell, index) => {
           cell.textContent = input[index];
           if (input[index] === TEST_WORD[index]) {
-            cell.style.backgroundColor = "green";
+            setTimeout(() => {
+              cell.style.transform = "rotateY(360deg)";
+              cell.style.backgroundColor = "green";
+            }, index * 150); // Delay each flip for sequential effect
             letterCount[input[index]]--;
             usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
           }
@@ -63,15 +66,14 @@ document
         // Second pass: check for partial matches
         cells.forEach((cell, index) => {
           if (cell.style.backgroundColor !== "green") {
-            if (
-              TEST_WORD.includes(input[index]) &&
-              (usedLetters[input[index]] || 0) < letterCount[input[index]]
-            ) {
-              cell.style.backgroundColor = "yellow";
-              usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
-            } else {
-              cell.style.backgroundColor = "";
-            }
+            setTimeout(() => {
+              cell.style.transform = "rotateY(360deg)";
+              if (TEST_WORD.includes(input[index]) && (usedLetters[input[index]] || 0) < letterCount[input[index]]) {
+                cell.style.backgroundColor = "yellow";
+              } else {
+                cell.style.backgroundColor = "";
+              }
+            }, index * 150 + 750); // Delay each flip for sequential effect, after all greens are shown
           }
         });
 
