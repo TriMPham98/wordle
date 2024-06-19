@@ -71,7 +71,7 @@ document.addEventListener("keydown", function (event) {
       cells.forEach((cell, index) => {
         if (input[index] === TEST_WORD[index]) {
           setTimeout(() => {
-            cell.style.transform = "rotateY(360deg)";
+            cell.style.transform = "rotateX(360deg)";
             cell.style.backgroundColor = "green";
           }, index * 150); // Ensure background color is set during the flip
           letterCount[input[index]]--;
@@ -83,7 +83,7 @@ document.addEventListener("keydown", function (event) {
       cells.forEach((cell, index) => {
         if (cell.style.backgroundColor !== "green") {
           setTimeout(() => {
-            cell.style.transform = "rotateY(360deg)";
+            cell.style.transform = "rotateX(360deg)";
             if (
               TEST_WORD.includes(input[index]) &&
               (usedLetters[input[index]] || 0) < letterCount[input[index]]
@@ -93,7 +93,7 @@ document.addEventListener("keydown", function (event) {
             } else {
               // cell.style.backgroundColor = "gray";
             }
-          }, index * 150 + 750); // Adjust timing if needed
+          }, index * 150); // Adjust timing if needed
         }
       });
 
