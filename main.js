@@ -171,10 +171,11 @@ function checkGameState(input) {
     // Add winning game logic here
   } else {
     console.log("Incorrect. Try again.");
-    currentGuess++;
-    if (currentGuess > 6) {
-      console.log("Game over. The word was: " + TEST_WORD);
-      // Add losing game logic here
-    }
+  }
+
+  currentGuess++;
+  if (currentGuess > 6) {
+    console.log("Game over. The word was: " + TEST_WORD);
+    // Add losing game logic here
   }
 }
