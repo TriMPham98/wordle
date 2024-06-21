@@ -72,7 +72,23 @@ document.addEventListener("keydown", function (event) {
         letterCount[char] = (letterCount[char] || 0) + 1;
       });
 
-      const usedLetters = {};
+      const cellStates = new Array(5).fill("gray");
+
+      // First pass: Mark correct letters
+      for (let i = 0; i < 5; i++) {
+        if (input[i] === TEST_WORD[i]) {
+          cellStates[i] = "green";
+          letterCount[input[i]]--;
+        }
+      }
+
+      // Second pass: Mark present letters
+      for (let i = 0; i < 5; i++) {
+        if (cellStates[i] === "gray" && letterCount[input[i]] > 0) {
+          cellStates[i] = "yellow";
+          letterCount[input[i]]--;
+        }
+      }
 
       // Animate and color cells sequentially
       const animateCells = (index) => {
@@ -95,21 +111,16 @@ document.addEventListener("keydown", function (event) {
         cell.style.transform = "rotateX(360deg)";
 
         setTimeout(() => {
-          if (input[index] === TEST_WORD[index]) {
+          if (cellStates[index] === "green") {
             console.log(
               `Letter ${input[index]} at position ${index} is correct`
             );
             cell.style.backgroundColor = "green";
-            letterCount[input[index]]--;
-          } else if (
-            TEST_WORD.includes(input[index]) &&
-            letterCount[input[index]] > 0
-          ) {
+          } else if (cellStates[index] === "yellow") {
             console.log(
               `Letter ${input[index]} at position ${index} is in the word but wrong position`
             );
             cell.style.backgroundColor = "#d2b100";
-            letterCount[input[index]]--;
           } else {
             console.log(
               `Letter ${input[index]} at position ${index} is incorrect`
