@@ -100,15 +100,16 @@ document.addEventListener("keydown", function (event) {
               `Letter ${input[index]} at position ${index} is correct`
             );
             cell.style.backgroundColor = "green";
+            letterCount[input[index]]--;
           } else if (
             TEST_WORD.includes(input[index]) &&
-            (usedLetters[input[index]] || 0) < letterCount[input[index]]
+            letterCount[input[index]] > 0
           ) {
             console.log(
               `Letter ${input[index]} at position ${index} is in the word but wrong position`
             );
             cell.style.backgroundColor = "#d2b100";
-            usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
+            letterCount[input[index]]--;
           } else {
             console.log(
               `Letter ${input[index]} at position ${index} is incorrect`
