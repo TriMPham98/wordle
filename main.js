@@ -16,35 +16,43 @@ document.addEventListener("DOMContentLoaded", async function () {
     TEST_WORD = "WOULD";
   }
 
-  // Initialize keyboard key elements
-  document.querySelectorAll(".key").forEach((key) => {
-    keyboardKeys[key.textContent] = key;
-  });
-
-  // Add click event listeners to keyboard keys
-  document.querySelectorAll(".key").forEach((key) => {
-    key.addEventListener("click", function () {
-      const keyValue = this.textContent;
-      if (keyValue === "⌫") {
-        handleBackspace();
-      } else if (keyValue === "ENTER") {
-        handleEnter();
-      } else {
-        handleKeyInput(keyValue);
-      }
-    });
-  });
+  initializeKeyboard();
 });
 
-document.addEventListener("keydown", function (event) {
-  if (/^[A-Z]$/i.test(event.key)) {
-    handleKeyInput(event.key.toUpperCase());
-  } else if (event.key === "Backspace") {
-    handleBackspace();
-  } else if (event.key === "Enter") {
-    handleEnter();
+function initializeKeyboard() {
+  document.querySelectorAll(".key").forEach((key) => {
+    keyboardKeys[key.dataset.key] = key;
+    key.addEventListener("click", handleKeyClick);
+  });
+
+  document.addEventListener("keydown", handleKeyPress);
+}
+
+function handleKeyClick() {
+  const keyValue = this.dataset.key;
+  processKey(keyValue);
+}
+
+function handleKeyPress(event) {
+  const keyValue = event.key.toUpperCase();
+  if (
+    /^[A-Z]$/.test(keyValue) ||
+    keyValue === "BACKSPACE" ||
+    keyValue === "ENTER"
+  ) {
+    processKey(keyValue);
   }
-});
+}
+
+function processKey(keyValue) {
+  if (keyValue === "BACKSPACE") {
+    handleBackspace();
+  } else if (keyValue === "ENTER") {
+    handleEnter();
+  } else {
+    handleKeyInput(keyValue);
+  }
+}
 
 function handleKeyInput(key) {
   if (currentGuess <= 6) {
@@ -52,11 +60,9 @@ function handleKeyInput(key) {
       ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
     }-row`;
     const cells = document.querySelectorAll(`.${rowClass} .cell`);
-    const filledCells = Array.from(cells).filter(
-      (cell) => cell.textContent !== ""
-    );
-    if (filledCells.length < 5) {
-      cells[filledCells.length].textContent = key;
+    const emptyCell = Array.from(cells).find((cell) => cell.textContent === "");
+    if (emptyCell) {
+      emptyCell.textContent = key;
     }
   }
 }
@@ -67,45 +73,41 @@ function handleBackspace() {
       ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
     }-row`;
     const cells = document.querySelectorAll(`.${rowClass} .cell`);
-    const filledCells = Array.from(cells).filter(
-      (cell) => cell.textContent !== ""
-    );
-    if (filledCells.length > 0) {
-      cells[filledCells.length - 1].textContent = "";
+    const lastFilledCell = Array.from(cells)
+      .reverse()
+      .find((cell) => cell.textContent !== "");
+    if (lastFilledCell) {
+      lastFilledCell.textContent = "";
     }
   }
 }
 
 function handleEnter() {
-  const input = Array.from(
-    document.querySelectorAll(
-      `.${
-        ["first", "second", "third", "fourth", "fifth", "sixth"][
-          currentGuess - 1
-        ]
-      }-row .cell`
-    )
-  )
-    .map((cell) => cell.textContent)
-    .join("");
-
-  if (/^[A-Z]{5}$/.test(input)) {
-    processGuess(input);
-  } else {
-    console.log("Invalid input. Please enter only letters.");
-  }
-}
-
-function processGuess(input) {
   const rowClass = `${
     ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
   }-row`;
   const cells = document.querySelectorAll(`.${rowClass} .cell`);
+  const input = Array.from(cells)
+    .map((cell) => cell.textContent)
+    .join("");
 
-  const letterCount = {};
-  TEST_WORD.split("").forEach((char) => {
-    letterCount[char] = (letterCount[char] || 0) + 1;
-  });
+  if (input.length === 5) {
+    processGuess(input);
+  } else {
+    console.log("Please enter a 5-letter word.");
+  }
+}
+
+function processGuess(input) {
+  const cells = document.querySelectorAll(
+    `.${
+      ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
+    }-row .cell`
+  );
+  const letterCount = TEST_WORD.split("").reduce((acc, char) => {
+    acc[char] = (acc[char] || 0) + 1;
+    return acc;
+  }, {});
 
   const cellStates = new Array(5).fill("gray");
 
@@ -125,45 +127,29 @@ function processGuess(input) {
     }
   }
 
-  // Animate and color cells sequentially
   animateCells(cells, cellStates, input);
 }
 
 function animateCells(cells, cellStates, input) {
-  let index = 0;
-  const animateNext = () => {
-    if (index >= cells.length) {
-      checkGameState(input);
-      return;
-    }
-
-    const cell = cells[index];
-    const letter = input[index];
-    cell.style.transform = "rotateX(360deg)";
-
+  cells.forEach((cell, index) => {
     setTimeout(() => {
-      updateCellAndKey(cell, keyboardKeys[letter], cellStates[index]);
-      cell.style.transform = "rotateX(360deg)";
-      setTimeout(() => animateNext(), 250);
-    }, 250);
-
-    index++;
-  };
-
-  animateNext();
+      updateCellAndKey(cell, keyboardKeys[input[index]], cellStates[index]);
+      if (index === 4) {
+        checkGameState(input);
+      }
+    }, index * 250);
+  });
 }
 
 function updateCellAndKey(cell, key, state) {
-  let color;
-  if (state === "green") {
-    color = "green";
-  } else if (state === "yellow") {
-    color = "#d2b100";
-  } else {
-    color = "gray";
-  }
+  const colors = { green: "#6aaa64", yellow: "#c9b458", gray: "#787c7e" };
+  const color = colors[state];
 
   cell.style.backgroundColor = color;
+  cell.style.borderColor = color;
+  cell.style.color = "white";
+  cell.style.transform = "rotateX(360deg)";
+
   if (key) {
     key.style.backgroundColor = color;
     key.style.color = "white";
