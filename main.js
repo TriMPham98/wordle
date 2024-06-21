@@ -104,10 +104,10 @@ function processGuess(input) {
       ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
     }-row .cell`
   );
-  const letterCount = TEST_WORD.split("").reduce((acc, char) => {
-    acc[char] = (acc[char] || 0) + 1;
-    return acc;
-  }, {});
+  const letterCount = {};
+  for (let char of TEST_WORD) {
+    letterCount[char] = (letterCount[char] || 0) + 1;
+  }
 
   const cellStates = new Array(5).fill("gray");
 
@@ -151,8 +151,17 @@ function updateCellAndKey(cell, key, state) {
   cell.style.transform = "rotateX(360deg)";
 
   if (key) {
-    key.style.backgroundColor = color;
-    key.style.color = "white";
+    // Update keyboard key color only if it's an improvement
+    if (
+      state === "green" ||
+      (state === "yellow" && key.style.backgroundColor !== colors.green) ||
+      (state === "gray" &&
+        key.style.backgroundColor !== colors.green &&
+        key.style.backgroundColor !== colors.yellow)
+    ) {
+      key.style.backgroundColor = color;
+      key.style.color = "white";
+    }
   }
 }
 
