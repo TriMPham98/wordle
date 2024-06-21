@@ -31,7 +31,7 @@ body {
   font-size: 2em;
   transition: transform 1.5s, background-color 1.5s;
   transform-style: preserve-3d;
-  margin: 5px; /* Adjust the margin size as needed */
+  margin: 5px;
 }
 
 input#wordInput {
@@ -54,17 +54,20 @@ input#wordInput {
 }
 
 .key {
+  background-color: #818384;
+  color: #f0f0f0;
   width: 40px;
-  height: 40px;
-  margin: 2px;
-  font-size: 18px;
+  height: 60px;
+  margin: 5px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 #enter {
   width: 120px;
-  height: 40px;
+  height: 60px;
 }
