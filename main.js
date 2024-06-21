@@ -1,4 +1,6 @@
-let TEST_WORD; // Initialize TEST_WORD
+let TEST_WORD;
+let currentGuess = 1;
+const keyboardKeys = {};
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -8,18 +10,44 @@ document.addEventListener("DOMContentLoaded", async function () {
     TEST_WORD = words[Math.floor(Math.random() * words.length)]
       .trim()
       .toUpperCase();
-    console.log("Test Word:", TEST_WORD); // Log the test word to the console
+    console.log("Test Word:", TEST_WORD);
   } catch (error) {
     console.error("Error loading words:", error);
-    TEST_WORD = "WOULD"; // Fallback word if loading fails
+    TEST_WORD = "WOULD";
+  }
+
+  // Initialize keyboard key elements
+  document.querySelectorAll(".key").forEach((key) => {
+    keyboardKeys[key.textContent] = key;
+  });
+
+  // Add click event listeners to keyboard keys
+  document.querySelectorAll(".key").forEach((key) => {
+    key.addEventListener("click", function () {
+      const keyValue = this.textContent;
+      if (keyValue === "⌫") {
+        handleBackspace();
+      } else if (keyValue === "ENTER") {
+        handleEnter();
+      } else {
+        handleKeyInput(keyValue);
+      }
+    });
+  });
+});
+
+document.addEventListener("keydown", function (event) {
+  if (/^[A-Z]$/i.test(event.key)) {
+    handleKeyInput(event.key.toUpperCase());
+  } else if (event.key === "Backspace") {
+    handleBackspace();
+  } else if (event.key === "Enter") {
+    handleEnter();
   }
 });
 
-let currentGuess = 1; // Track the current guess number
-
-document.addEventListener("keydown", function (event) {
-  const allowedKeys = /^[A-Z]$/i;
-  if (allowedKeys.test(event.key) && currentGuess <= 6) {
+function handleKeyInput(key) {
+  if (currentGuess <= 6) {
     const rowClass = `${
       ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
     }-row`;
@@ -28,10 +56,13 @@ document.addEventListener("keydown", function (event) {
       (cell) => cell.textContent !== ""
     );
     if (filledCells.length < 5) {
-      cells[filledCells.length].textContent = event.key.toUpperCase();
+      cells[filledCells.length].textContent = key;
     }
   }
-  if (event.key === "Backspace" && currentGuess <= 6) {
+}
+
+function handleBackspace() {
+  if (currentGuess <= 6) {
     const rowClass = `${
       ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
     }-row`;
@@ -43,102 +74,112 @@ document.addEventListener("keydown", function (event) {
       cells[filledCells.length - 1].textContent = "";
     }
   }
-  if (event.key === "Enter") {
-    const input = Array.from(
-      document.querySelectorAll(
-        `.${
-          ["first", "second", "third", "fourth", "fifth", "sixth"][
-            currentGuess - 1
-          ]
-        }-row .cell`
-      )
-    )
-      .map((cell) => cell.textContent)
-      .join("");
+}
 
-    console.log("Input:", input);
-    console.log("Test Word:", TEST_WORD);
-
-    if (/^[A-Z]{5}$/.test(input)) {
-      const rowClass = `${
+function handleEnter() {
+  const input = Array.from(
+    document.querySelectorAll(
+      `.${
         ["first", "second", "third", "fourth", "fifth", "sixth"][
           currentGuess - 1
         ]
-      }-row`;
-      const cells = document.querySelectorAll(`.${rowClass} .cell`);
+      }-row .cell`
+    )
+  )
+    .map((cell) => cell.textContent)
+    .join("");
 
-      const letterCount = {};
-      TEST_WORD.split("").forEach((char) => {
-        letterCount[char] = (letterCount[char] || 0) + 1;
-      });
+  if (/^[A-Z]{5}$/.test(input)) {
+    processGuess(input);
+  } else {
+    console.log("Invalid input. Please enter only letters.");
+  }
+}
 
-      const cellStates = new Array(5).fill("gray");
+function processGuess(input) {
+  const rowClass = `${
+    ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
+  }-row`;
+  const cells = document.querySelectorAll(`.${rowClass} .cell`);
 
-      // First pass: Mark correct letters
-      for (let i = 0; i < 5; i++) {
-        if (input[i] === TEST_WORD[i]) {
-          cellStates[i] = "green";
-          letterCount[input[i]]--;
-        }
-      }
+  const letterCount = {};
+  TEST_WORD.split("").forEach((char) => {
+    letterCount[char] = (letterCount[char] || 0) + 1;
+  });
 
-      // Second pass: Mark present letters
-      for (let i = 0; i < 5; i++) {
-        if (cellStates[i] === "gray" && letterCount[input[i]] > 0) {
-          cellStates[i] = "yellow";
-          letterCount[input[i]]--;
-        }
-      }
+  const cellStates = new Array(5).fill("gray");
 
-      // Animate and color cells sequentially
-      const animateCells = (index) => {
-        if (index >= cells.length) {
-          // All cells animated, check for win or move to next guess
-          if (input === TEST_WORD) {
-            console.log("Correct! The word matches the test word.");
-            // Add logic for winning the game
-          } else {
-            console.log("Incorrect. Try again.");
-            currentGuess++; // Move to the next guess
-            if (currentGuess > 6) {
-              console.log("No more guesses left. The word was: " + TEST_WORD);
-            }
-          }
-          return;
-        }
-
-        const cell = cells[index];
-        cell.style.transform = "rotateX(360deg)";
-
-        setTimeout(() => {
-          if (cellStates[index] === "green") {
-            console.log(
-              `Letter ${input[index]} at position ${index} is correct`
-            );
-            cell.style.backgroundColor = "green";
-          } else if (cellStates[index] === "yellow") {
-            console.log(
-              `Letter ${input[index]} at position ${index} is in the word but wrong position`
-            );
-            cell.style.backgroundColor = "#d2b100";
-          } else {
-            console.log(
-              `Letter ${input[index]} at position ${index} is incorrect`
-            );
-            cell.style.backgroundColor = "gray";
-          }
-
-          cell.style.transform = "rotateX(360deg)";
-
-          // Animate next cell
-          setTimeout(() => animateCells(index + 1), 250);
-        }, 250);
-      };
-
-      // Start the animation sequence
-      animateCells(0);
-    } else {
-      console.log("Invalid input. Please enter only letters.");
+  // First pass: Mark correct letters
+  for (let i = 0; i < 5; i++) {
+    if (input[i] === TEST_WORD[i]) {
+      cellStates[i] = "green";
+      letterCount[input[i]]--;
     }
   }
-});
+
+  // Second pass: Mark present letters
+  for (let i = 0; i < 5; i++) {
+    if (cellStates[i] === "gray" && letterCount[input[i]] > 0) {
+      cellStates[i] = "yellow";
+      letterCount[input[i]]--;
+    }
+  }
+
+  // Animate and color cells sequentially
+  animateCells(cells, cellStates, input);
+}
+
+function animateCells(cells, cellStates, input) {
+  let index = 0;
+  const animateNext = () => {
+    if (index >= cells.length) {
+      checkGameState(input);
+      return;
+    }
+
+    const cell = cells[index];
+    const letter = input[index];
+    cell.style.transform = "rotateX(360deg)";
+
+    setTimeout(() => {
+      updateCellAndKey(cell, keyboardKeys[letter], cellStates[index]);
+      cell.style.transform = "rotateX(360deg)";
+      setTimeout(() => animateNext(), 250);
+    }, 250);
+
+    index++;
+  };
+
+  animateNext();
+}
+
+function updateCellAndKey(cell, key, state) {
+  let color;
+  if (state === "green") {
+    color = "green";
+  } else if (state === "yellow") {
+    color = "#d2b100";
+  } else {
+    color = "gray";
+  }
+
+  cell.style.backgroundColor = color;
+  if (key) {
+    key.style.backgroundColor = color;
+    key.style.color = "white";
+  }
+}
+
+function checkGameState(input) {
+  if (input === TEST_WORD) {
+    console.log("Correct! You've won the game!");
+    // Add winning game logic here
+  } else {
+    console.log("Incorrect. Try again.");
+    currentGuess++;
+    if (currentGuess > 6) {
+      console.log("Game over. The word was: " + TEST_WORD);
+      // Add losing game logic here
+    }
+  }
+}
