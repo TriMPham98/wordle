@@ -1,13 +1,18 @@
 let TEST_WORD; // Initialize TEST_WORD
 
 document.addEventListener("DOMContentLoaded", async function () {
-  const response = await fetch("words.txt");
-  const data = await response.text();
-  const words = data.split("\n");
-  TEST_WORD = words[Math.floor(Math.random() * words.length)]
-    .trim()
-    .toUpperCase();
-  console.log("Test Word:", TEST_WORD); // Log the test word to the console
+  try {
+    const response = await fetch("words.txt");
+    const data = await response.text();
+    const words = data.split("\n");
+    TEST_WORD = words[Math.floor(Math.random() * words.length)]
+      .trim()
+      .toUpperCase();
+    console.log("Test Word:", TEST_WORD); // Log the test word to the console
+  } catch (error) {
+    console.error("Error loading words:", error);
+    TEST_WORD = "WOULD"; // Fallback word if loading fails
+  }
 });
 
 let currentGuess = 1; // Track the current guess number
@@ -39,7 +44,6 @@ document.addEventListener("keydown", function (event) {
     }
   }
   if (event.key === "Enter") {
-    // Check if the Enter key was pressed
     const input = Array.from(
       document.querySelectorAll(
         `.${
@@ -51,8 +55,11 @@ document.addEventListener("keydown", function (event) {
     )
       .map((cell) => cell.textContent)
       .join("");
+
+    console.log("Input:", input);
+    console.log("Test Word:", TEST_WORD);
+
     if (/^[A-Z]{5}$/.test(input)) {
-      // Check if input contains exactly 5 letters
       const rowClass = `${
         ["first", "second", "third", "fourth", "fifth", "sixth"][
           currentGuess - 1
@@ -68,19 +75,29 @@ document.addEventListener("keydown", function (event) {
       const usedLetters = {};
 
       // First pass: check for exact matches (green)
+      // Inside the Enter key event listener, after the input validation
       cells.forEach((cell, index) => {
         if (input[index] === TEST_WORD[index]) {
-          setTimeout(() => {
-            cell.style.transform = "rotateX(360deg)";
-            cell.style.backgroundColor = "green";
-          }, index * 150); // Ensure background color is set during the flip
-          letterCount[input[index]]--;
-          usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
+          console.log(`Letter ${input[index]} at position ${index} is correct`);
+          cell.style.backgroundColor = "green";
+        } else if (TEST_WORD.includes(input[index])) {
+          console.log(
+            `Letter ${input[index]} at position ${index} is in the word but wrong position`
+          );
+          cell.style.backgroundColor = "#d2b100";
+        } else {
+          console.log(
+            `Letter ${input[index]} at position ${index} is incorrect`
+          );
+          cell.style.backgroundColor = "gray";
         }
+        // Remove the setTimeout to see if it's causing issues
+        cell.style.transform = "rotateX(360deg)";
       });
 
       if (input === TEST_WORD) {
         console.log("Correct! The word matches the test word.");
+        // Add logic for winning the game
       } else {
         // Second pass: check for partial matches (yellow) and incorrect (gray)
         cells.forEach((cell, index) => {
@@ -97,13 +114,13 @@ document.addEventListener("keydown", function (event) {
               } else {
                 cell.style.backgroundColor = "gray";
               }
-            }, index * 150); // Adjust timing if needed
+            }, index * 150);
           }
         });
         console.log("Incorrect. Try again.");
         currentGuess++; // Move to the next guess
         if (currentGuess > 6) {
-          console.log("No more guesses left.");
+          console.log("No more guesses left. The word was: " + TEST_WORD);
         }
       }
     } else {
