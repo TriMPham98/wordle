@@ -74,55 +74,57 @@ document.addEventListener("keydown", function (event) {
 
       const usedLetters = {};
 
-      // First pass: check for exact matches (green)
-      // Inside the Enter key event listener, after the input validation
-      cells.forEach((cell, index) => {
-        if (input[index] === TEST_WORD[index]) {
-          console.log(`Letter ${input[index]} at position ${index} is correct`);
-          cell.style.backgroundColor = "green";
-        } else if (TEST_WORD.includes(input[index])) {
-          console.log(
-            `Letter ${input[index]} at position ${index} is in the word but wrong position`
-          );
-          cell.style.backgroundColor = "#d2b100";
-        } else {
-          console.log(
-            `Letter ${input[index]} at position ${index} is incorrect`
-          );
-          cell.style.backgroundColor = "gray";
-        }
-        // Remove the setTimeout to see if it's causing issues
-        cell.style.transform = "rotateX(360deg)";
-      });
-
-      if (input === TEST_WORD) {
-        console.log("Correct! The word matches the test word.");
-        // Add logic for winning the game
-      } else {
-        // Second pass: check for partial matches (yellow) and incorrect (gray)
-        cells.forEach((cell, index) => {
-          if (cell.style.backgroundColor !== "green") {
-            setTimeout(() => {
-              cell.style.transform = "rotateX(360deg)";
-              if (
-                TEST_WORD.includes(input[index]) &&
-                (usedLetters[input[index]] || 0) < letterCount[input[index]]
-              ) {
-                cell.style.backgroundColor = "#d2b100";
-                usedLetters[input[index]] =
-                  (usedLetters[input[index]] || 0) + 1;
-              } else {
-                cell.style.backgroundColor = "gray";
-              }
-            }, index * 150);
+      // Animate and color cells sequentially
+      const animateCells = (index) => {
+        if (index >= cells.length) {
+          // All cells animated, check for win or move to next guess
+          if (input === TEST_WORD) {
+            console.log("Correct! The word matches the test word.");
+            // Add logic for winning the game
+          } else {
+            console.log("Incorrect. Try again.");
+            currentGuess++; // Move to the next guess
+            if (currentGuess > 6) {
+              console.log("No more guesses left. The word was: " + TEST_WORD);
+            }
           }
-        });
-        console.log("Incorrect. Try again.");
-        currentGuess++; // Move to the next guess
-        if (currentGuess > 6) {
-          console.log("No more guesses left. The word was: " + TEST_WORD);
+          return;
         }
-      }
+
+        const cell = cells[index];
+        cell.style.transform = "rotateX(360deg)";
+
+        setTimeout(() => {
+          if (input[index] === TEST_WORD[index]) {
+            console.log(
+              `Letter ${input[index]} at position ${index} is correct`
+            );
+            cell.style.backgroundColor = "green";
+          } else if (
+            TEST_WORD.includes(input[index]) &&
+            (usedLetters[input[index]] || 0) < letterCount[input[index]]
+          ) {
+            console.log(
+              `Letter ${input[index]} at position ${index} is in the word but wrong position`
+            );
+            cell.style.backgroundColor = "#d2b100";
+            usedLetters[input[index]] = (usedLetters[input[index]] || 0) + 1;
+          } else {
+            console.log(
+              `Letter ${input[index]} at position ${index} is incorrect`
+            );
+            cell.style.backgroundColor = "gray";
+          }
+
+          cell.style.transform = "rotateX(360deg)";
+
+          // Animate next cell
+          setTimeout(() => animateCells(index + 1), 250);
+        }, 250);
+      };
+
+      // Start the animation sequence
+      animateCells(0);
     } else {
       console.log("Invalid input. Please enter only letters.");
     }

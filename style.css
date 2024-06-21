@@ -29,7 +29,7 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 2em;
-  transition: transform 1.2s, background-color 1.2s;
+  transition: transform 0.25s, background-color 0.25s;
   transform-style: preserve-3d;
 }
 
