@@ -62,3 +62,8 @@ input#wordInput {
   justify-content: center;
   cursor: pointer;
 }
+
+#enter {
+  width: 120px;
+  height: 40px;
+}
