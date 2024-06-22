@@ -2,18 +2,32 @@ let TEST_WORD;
 let currentGuess = 1;
 const keyboardKeys = {};
 let validWords = [];
+let commonWords = [];
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
-    const response = await fetch("words.txt");
-    const data = await response.text();
-    validWords = data.split("\n").map((word) => word.trim().toUpperCase());
-    TEST_WORD = validWords[Math.floor(Math.random() * validWords.length)];
+    // Load valid words
+    const validWordsResponse = await fetch("valid-words.txt");
+    const validWordsData = await validWordsResponse.text();
+    validWords = validWordsData
+      .split("\n")
+      .map((word) => word.trim().toUpperCase());
+
+    // Load common words
+    const commonWordsResponse = await fetch("common-words.txt");
+    const commonWordsData = await commonWordsResponse.text();
+    commonWords = commonWordsData
+      .split("\n")
+      .map((word) => word.trim().toUpperCase());
+
+    // Pick a random word from common words
+    TEST_WORD = commonWords[Math.floor(Math.random() * commonWords.length)];
     console.log("Test Word:", TEST_WORD);
   } catch (error) {
     console.error("Error loading words:", error);
     TEST_WORD = "WOULD";
     validWords = [TEST_WORD];
+    commonWords = [TEST_WORD];
   }
 
   initializeKeyboard();
