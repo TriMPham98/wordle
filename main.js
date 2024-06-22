@@ -95,16 +95,16 @@ function handleEnter() {
     if (validWords.includes(input)) {
       processGuess(input);
     } else {
-      showInvalidWordMessage();
+      showMessage("Not in word list");
     }
   } else {
     console.log("Please enter a 5-letter word.");
   }
 }
 
-function showInvalidWordMessage() {
+function showMessage(text) {
   const messageElement = document.createElement("div");
-  messageElement.textContent = "Not in word list";
+  messageElement.textContent = text;
   messageElement.style.cssText = `
     position: fixed;
     top: 10%;
@@ -192,14 +192,20 @@ function updateCellAndKey(cell, key, state) {
 function checkGameState(input) {
   if (input === TEST_WORD) {
     console.log("Correct! You've won the game!");
-    // Add winning game logic here
+    showMessage(
+      `Congratulations! You've guessed the word in ${currentGuess} ${
+        currentGuess === 1 ? "try" : "tries"
+      }.`
+    );
+    // Add additional winning game logic here if needed
   } else {
     console.log("Incorrect. Try again.");
   }
 
   currentGuess++;
-  if (currentGuess > 6) {
+  if (currentGuess > 6 && input !== TEST_WORD) {
     console.log("Game over. The word was: " + TEST_WORD);
-    // Add losing game logic here
+    showMessage(`Game over. The word was: ${TEST_WORD}`);
+    // Add additional losing game logic here if needed
   }
 }
