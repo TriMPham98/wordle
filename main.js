@@ -240,7 +240,7 @@ function checkGameState(input) {
   if (currentGuess > 6 && input !== TEST_WORD) {
     console.log("Game over. The word was: " + TEST_WORD);
     showNewGamePopup(
-      `Game over. The word was: ${TEST_WORD}`,
+      `The word was: ${TEST_WORD}`,
       false,
       "Game over!"
     );
