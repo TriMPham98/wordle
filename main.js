@@ -269,10 +269,10 @@ function showNewGamePopup(message) {
   const popup = document.createElement("div");
   popup.id = "newGamePopup";
   popup.innerHTML = `
-    <div style="background-color: white; padding: 20px; border-radius: 10px; text-align: center;">
+    <div class="popup-content">
       <h2>${message}</h2>
-      <p>The word was: ${TEST_WORD}</p>
-      <button id="newGameButton">Start New Game</button>
+      <p>The word was: <strong>${TEST_WORD}</strong></p>
+      <button id="newGameButton">Play Again</button>
     </div>
   `;
   popup.style.cssText = `
@@ -281,12 +281,53 @@ function showNewGamePopup(message) {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
   `;
+
+  const style = document.createElement("style");
+  style.textContent = `
+    .popup-content {
+      background-color: #121213;
+      color: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 90%;
+      width: 300px;
+      box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.2);
+    }
+    .popup-content h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .popup-content p {
+      font-size: 18px;
+      margin-bottom: 24px;
+    }
+    .popup-content strong {
+      color: #6aaa64;
+    }
+    #newGameButton {
+      background-color: #538d4e;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #newGameButton:hover {
+      background-color: #6aaa64;
+    }
+  `;
+
+  document.head.appendChild(style);
   document.body.appendChild(popup);
 
   document.getElementById("newGameButton").addEventListener("click", () => {
