@@ -134,6 +134,14 @@ function handleBackspace() {
   }
 }
 
+function shakeRow(rowClass) {
+  const row = document.querySelector(`.${rowClass}`);
+  row.classList.add("shake");
+  setTimeout(() => {
+    row.classList.remove("shake");
+  }, 500);
+}
+
 function handleEnter() {
   const rowClass = `${
     ["first", "second", "third", "fourth", "fifth", "sixth"][currentGuess - 1]
@@ -148,9 +156,11 @@ function handleEnter() {
       processGuess(input);
     } else {
       showNewGamePopup("Not in word list", true);
+      shakeRow(rowClass);
     }
   } else {
     console.log("Please enter a 5-letter word.");
+    shakeRow(rowClass);
   }
 }
 
@@ -225,7 +235,7 @@ function checkGameState(input) {
   if (input === TEST_WORD) {
     console.log("Correct! You've won the game!");
     showNewGamePopup(
-      `Congratulations! You've guessed the word in ${currentGuess} ${
+      `Congratulations, you've guessed the word in ${currentGuess} ${
         currentGuess === 1 ? "try" : "tries"
       }.`,
       false,
@@ -239,11 +249,7 @@ function checkGameState(input) {
   currentGuess++;
   if (currentGuess > 6 && input !== TEST_WORD) {
     console.log("Game over. The word was: " + TEST_WORD);
-    showNewGamePopup(
-      `The word was: ${TEST_WORD}`,
-      false,
-      "Game over!"
-    );
+    showNewGamePopup(`The word was: ${TEST_WORD}`, false, "Game over!");
     gameOver = true;
   }
 }
