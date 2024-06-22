@@ -90,7 +90,12 @@ function handleKeyPress(event) {
 }
 
 function processKey(keyValue) {
-  if (gameOver) return;
+  if (gameOver) {
+    if (keyValue === "ENTER") {
+      startNewGame();
+    }
+    return;
+  }
 
   if (keyValue === "BACKSPACE") {
     handleBackspace();
@@ -273,6 +278,7 @@ function showNewGamePopup(message) {
       <h2>${message}</h2>
       <p>The word was: <strong>${TEST_WORD}</strong></p>
       <button id="newGameButton">Play Again</button>
+      <p>Press ENTER to start a new game</p>
     </div>
   `;
   popup.style.cssText = `
@@ -321,6 +327,7 @@ function showNewGamePopup(message) {
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      margin-bottom: 16px;
     }
     #newGameButton:hover {
       background-color: #6aaa64;
