@@ -60,7 +60,7 @@ function startNewGame() {
   // Hide the new game popup if it's visible
   const popup = document.getElementById("newGamePopup");
   if (popup) {
-    popup.style.display = "none";
+    popup.remove();
   }
 }
 
@@ -260,6 +260,12 @@ function checkGameState(input) {
 }
 
 function showNewGamePopup(message) {
+  // Remove any existing popup
+  const existingPopup = document.getElementById("newGamePopup");
+  if (existingPopup) {
+    existingPopup.remove();
+  }
+
   const popup = document.createElement("div");
   popup.id = "newGamePopup";
   popup.innerHTML = `
