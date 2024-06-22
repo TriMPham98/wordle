@@ -3,6 +3,7 @@ let currentGuess = 1;
 const keyboardKeys = {};
 let validWords = [];
 let commonWords = [];
+let gameOver = false;
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -20,18 +21,48 @@ document.addEventListener("DOMContentLoaded", async function () {
       .split("\n")
       .map((word) => word.trim().toUpperCase());
 
-    // Pick a random word from common words
-    TEST_WORD = commonWords[Math.floor(Math.random() * commonWords.length)];
-    console.log("Test Word:", TEST_WORD);
+    startNewGame();
   } catch (error) {
     console.error("Error loading words:", error);
     TEST_WORD = "WOULD";
     validWords = [TEST_WORD];
     commonWords = [TEST_WORD];
+    startNewGame();
   }
 
   initializeKeyboard();
 });
+
+function startNewGame() {
+  // Pick a random word from common words
+  TEST_WORD = commonWords[Math.floor(Math.random() * commonWords.length)];
+  console.log("Test Word:", TEST_WORD);
+
+  // Reset game state
+  currentGuess = 1;
+  gameOver = false;
+
+  // Clear the game board
+  document.querySelectorAll(".cell").forEach((cell) => {
+    cell.textContent = "";
+    cell.style.backgroundColor = "";
+    cell.style.borderColor = "";
+    cell.style.color = "";
+    cell.style.transform = "";
+  });
+
+  // Reset keyboard colors
+  document.querySelectorAll(".key").forEach((key) => {
+    key.style.backgroundColor = "";
+    key.style.color = "";
+  });
+
+  // Hide the new game popup if it's visible
+  const popup = document.getElementById("newGamePopup");
+  if (popup) {
+    popup.style.display = "none";
+  }
+}
 
 function initializeKeyboard() {
   document.querySelectorAll(".key").forEach((key) => {
@@ -59,6 +90,8 @@ function handleKeyPress(event) {
 }
 
 function processKey(keyValue) {
+  if (gameOver) return;
+
   if (keyValue === "BACKSPACE") {
     handleBackspace();
   } else if (keyValue === "ENTER") {
@@ -211,7 +244,8 @@ function checkGameState(input) {
         currentGuess === 1 ? "try" : "tries"
       }.`
     );
-    // Add additional winning game logic here if needed
+    gameOver = true;
+    showNewGamePopup("You won!");
   } else {
     console.log("Incorrect. Try again.");
   }
@@ -220,6 +254,36 @@ function checkGameState(input) {
   if (currentGuess > 6 && input !== TEST_WORD) {
     console.log("Game over. The word was: " + TEST_WORD);
     showMessage(`Game over. The word was: ${TEST_WORD}`);
-    // Add additional losing game logic here if needed
+    gameOver = true;
+    showNewGamePopup("Game over");
   }
+}
+
+function showNewGamePopup(message) {
+  const popup = document.createElement("div");
+  popup.id = "newGamePopup";
+  popup.innerHTML = `
+    <div style="background-color: white; padding: 20px; border-radius: 10px; text-align: center;">
+      <h2>${message}</h2>
+      <p>The word was: ${TEST_WORD}</p>
+      <button id="newGameButton">Start New Game</button>
+    </div>
+  `;
+  popup.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `;
+  document.body.appendChild(popup);
+
+  document.getElementById("newGameButton").addEventListener("click", () => {
+    startNewGame();
+  });
 }
