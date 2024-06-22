@@ -260,7 +260,7 @@ function checkGameState(input) {
     console.log("Game over. The word was: " + TEST_WORD);
     showMessage(`Game over. The word was: ${TEST_WORD}`);
     gameOver = true;
-    showNewGamePopup("Game over");
+    showNewGamePopup("Game over!");
   }
 }
 
