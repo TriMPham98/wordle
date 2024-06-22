@@ -308,7 +308,6 @@ function showNewGamePopup(message, isTemporary = false, title = "") {
         text-align: center;
         max-width: 90%;
         width: 300px;
-        box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.2);
       }
       .popup-content h2 {
         font-size: 24px;
