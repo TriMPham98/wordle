@@ -4,12 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/svg+xml" href="wordle.svg">
+    <link rel="icon" type="image/svg+xml" href="wordle.svg" />
     <title>Wordle</title>
   </head>
   <body>
     <div class="container">
       <h1>Wordle</h1>
+      <div class="night-mode-toggle">
+        <label for="nightModeToggle">Night Mode</label>
+        <label class="switch">
+          <input type="checkbox" id="nightModeToggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
       <div class="row first-row">
         <div class="cell"></div>
         <div class="cell"></div>
@@ -92,5 +99,3 @@
     <script src="main.js"></script>
   </body>
 </html>
-
-<!-- TODO: Add horizontal shaking animation for invalid guesses-->

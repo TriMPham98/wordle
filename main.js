@@ -4,6 +4,7 @@ const keyboardKeys = {};
 let validWords = [];
 let commonWords = [];
 let gameOver = false;
+let nightMode = true;
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -31,7 +32,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   initializeKeyboard();
+  initializeNightModeToggle();
 });
+
+function initializeNightModeToggle() {
+  const toggle = document.getElementById("nightModeToggle");
+  toggle.addEventListener("change", function () {
+    nightMode = this.checked;
+    updateNightMode();
+  });
+}
+
+function updateNightMode() {
+  document.body.classList.toggle("night-mode", nightMode);
+}
 
 function startNewGame() {
   // Pick a random word from common words
