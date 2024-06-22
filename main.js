@@ -1,19 +1,19 @@
 let TEST_WORD;
 let currentGuess = 1;
 const keyboardKeys = {};
+let validWords = [];
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const response = await fetch("words.txt");
     const data = await response.text();
-    const words = data.split("\n");
-    TEST_WORD = words[Math.floor(Math.random() * words.length)]
-      .trim()
-      .toUpperCase();
+    validWords = data.split("\n").map((word) => word.trim().toUpperCase());
+    TEST_WORD = validWords[Math.floor(Math.random() * validWords.length)];
     console.log("Test Word:", TEST_WORD);
   } catch (error) {
     console.error("Error loading words:", error);
     TEST_WORD = "WOULD";
+    validWords = [TEST_WORD];
   }
 
   initializeKeyboard();
@@ -92,10 +92,34 @@ function handleEnter() {
     .join("");
 
   if (input.length === 5) {
-    processGuess(input);
+    if (validWords.includes(input)) {
+      processGuess(input);
+    } else {
+      showInvalidWordMessage();
+    }
   } else {
     console.log("Please enter a 5-letter word.");
   }
+}
+
+function showInvalidWordMessage() {
+  const messageElement = document.createElement("div");
+  messageElement.textContent = "Not in word list";
+  messageElement.style.cssText = `
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+  `;
+  document.body.appendChild(messageElement);
+  setTimeout(() => {
+    messageElement.remove();
+  }, 2000);
 }
 
 function processGuess(input) {
