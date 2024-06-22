@@ -489,6 +489,7 @@ chips
 chirp
 choir
 choke
+chomp
 chops
 chord
 chose
