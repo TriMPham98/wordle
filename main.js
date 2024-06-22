@@ -147,31 +147,11 @@ function handleEnter() {
     if (validWords.includes(input)) {
       processGuess(input);
     } else {
-      showMessage("Not in word list");
+      showNewGamePopup("Not in word list", true);
     }
   } else {
     console.log("Please enter a 5-letter word.");
   }
-}
-
-function showMessage(text) {
-  const messageElement = document.createElement("div");
-  messageElement.textContent = text;
-  messageElement.style.cssText = `
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-  `;
-  document.body.appendChild(messageElement);
-  setTimeout(() => {
-    messageElement.remove();
-  }, 2000);
 }
 
 function processGuess(input) {
@@ -244,13 +224,14 @@ function updateCellAndKey(cell, key, state) {
 function checkGameState(input) {
   if (input === TEST_WORD) {
     console.log("Correct! You've won the game!");
-    showMessage(
+    showNewGamePopup(
       `Congratulations! You've guessed the word in ${currentGuess} ${
         currentGuess === 1 ? "try" : "tries"
-      }.`
+      }.`,
+      false,
+      "You won!"
     );
     gameOver = true;
-    showNewGamePopup("You won!");
   } else {
     console.log("Incorrect. Try again.");
   }
@@ -258,13 +239,16 @@ function checkGameState(input) {
   currentGuess++;
   if (currentGuess > 6 && input !== TEST_WORD) {
     console.log("Game over. The word was: " + TEST_WORD);
-    showMessage(`Game over. The word was: ${TEST_WORD}`);
+    showNewGamePopup(
+      `Game over. The word was: ${TEST_WORD}`,
+      false,
+      "Game over!"
+    );
     gameOver = true;
-    showNewGamePopup("Game over!");
   }
 }
 
-function showNewGamePopup(message) {
+function showNewGamePopup(message, isTemporary = false, title = "") {
   // Remove any existing popup
   const existingPopup = document.getElementById("newGamePopup");
   if (existingPopup) {
@@ -273,71 +257,92 @@ function showNewGamePopup(message) {
 
   const popup = document.createElement("div");
   popup.id = "newGamePopup";
-  popup.innerHTML = `
-    <div class="popup-content">
-      <h2>${message}</h2>
-      <p>The word was: <strong>${TEST_WORD}</strong></p>
-      <button id="newGameButton">Play Again</button>
-      <p>Press ENTER to start a new game</p>
-    </div>
-  `;
-  popup.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  `;
 
-  const style = document.createElement("style");
-  style.textContent = `
-    .popup-content {
-      background-color: #121213;
-      color: #ffffff;
-      padding: 24px;
-      border-radius: 12px;
-      text-align: center;
-      max-width: 90%;
-      width: 300px;
-      box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.2);
-    }
-    .popup-content h2 {
-      font-size: 24px;
-      margin-bottom: 16px;
-    }
-    .popup-content p {
-      font-size: 18px;
-      margin-bottom: 24px;
-    }
-    .popup-content strong {
-      color: #6aaa64;
-    }
-    #newGameButton {
-      background-color: #538d4e;
-      color: #ffffff;
-      border: none;
-      padding: 12px 24px;
+  if (isTemporary) {
+    popup.innerHTML = `<div class="popup-content"><p>${message}</p></div>`;
+    popup.style.cssText = `
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
       font-size: 16px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-bottom: 16px;
-    }
-    #newGameButton:hover {
-      background-color: #6aaa64;
-    }
-  `;
+      z-index: 1000;
+    `;
+    document.body.appendChild(popup);
+    setTimeout(() => {
+      popup.remove();
+    }, 2000);
+  } else {
+    popup.innerHTML = `
+      <div class="popup-content">
+        <h2>${title}</h2>
+        <p>${message}</p>
+        <button id="newGameButton">Play Again</button>
+        <p>Press ENTER to start a new game</p>
+      </div>
+    `;
+    popup.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    `;
 
-  document.head.appendChild(style);
-  document.body.appendChild(popup);
+    const style = document.createElement("style");
+    style.textContent = `
+      .popup-content {
+        background-color: #121213;
+        color: #ffffff;
+        padding: 24px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 90%;
+        width: 300px;
+        box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.2);
+      }
+      .popup-content h2 {
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+      .popup-content p {
+        font-size: 18px;
+        margin-bottom: 24px;
+      }
+      .popup-content strong {
+        color: #6aaa64;
+      }
+      #newGameButton {
+        background-color: #538d4e;
+        color: #ffffff;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 16px;
+      }
+      #newGameButton:hover {
+        background-color: #6aaa64;
+      }
+    `;
 
-  document.getElementById("newGameButton").addEventListener("click", () => {
-    startNewGame();
-  });
+    document.head.appendChild(style);
+    document.body.appendChild(popup);
+
+    document.getElementById("newGameButton").addEventListener("click", () => {
+      startNewGame();
+    });
+  }
 }
