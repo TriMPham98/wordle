@@ -4,7 +4,6 @@ const keyboardKeys = {};
 let validWords = [];
 let commonWords = [];
 let gameOver = false;
-let nightMode = false;
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -32,52 +31,33 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   initializeKeyboard();
-  initializeNightModeToggle();
 });
 
-function initializeNightModeToggle() {
-  const toggle = document.getElementById("nightModeToggle");
-  toggle.addEventListener("change", function () {
-    nightMode = this.checked;
-    updateNightMode();
-  });
-}
-
-function updateNightMode() {
-  document.body.classList.toggle("night-mode", nightMode);
-  updateAllColors();
-}
-
-function updateAllColors() {
-  document.querySelectorAll(".cell").forEach((cell) => {
-    updateCellColor(cell);
-  });
-  document.querySelectorAll(".key").forEach((key) => {
-    updateKeyColor(key);
-  });
-}
-
 function startNewGame() {
+  // Pick a random word from common words
   TEST_WORD = commonWords[Math.floor(Math.random() * commonWords.length)];
   console.log("Test Word:", TEST_WORD);
 
+  // Reset game state
   currentGuess = 1;
   gameOver = false;
 
+  // Clear the game board
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.textContent = "";
-    cell.dataset.state = "";
     cell.style.backgroundColor = "";
     cell.style.borderColor = "";
     cell.style.color = "";
     cell.style.transform = "";
   });
 
+  // Reset keyboard colors
   document.querySelectorAll(".key").forEach((key) => {
-    key.dataset.state = "";
-    updateKeyColor(key);
+    key.style.backgroundColor = "";
+    key.style.color = "";
   });
 
+  // Hide the new game popup if it's visible
   const popup = document.getElementById("newGamePopup");
   if (popup) {
     popup.remove();
@@ -195,20 +175,20 @@ function processGuess(input) {
     letterCount[char] = (letterCount[char] || 0) + 1;
   }
 
-  const cellStates = new Array(5).fill("absent");
+  const cellStates = new Array(5).fill("gray");
 
   // First pass: Mark correct letters
   for (let i = 0; i < 5; i++) {
     if (input[i] === TEST_WORD[i]) {
-      cellStates[i] = "correct";
+      cellStates[i] = "green";
       letterCount[input[i]]--;
     }
   }
 
   // Second pass: Mark present letters
   for (let i = 0; i < 5; i++) {
-    if (cellStates[i] === "absent" && letterCount[input[i]] > 0) {
-      cellStates[i] = "present";
+    if (cellStates[i] === "gray" && letterCount[input[i]] > 0) {
+      cellStates[i] = "yellow";
       letterCount[input[i]]--;
     }
   }
@@ -219,7 +199,6 @@ function processGuess(input) {
 function animateCells(cells, cellStates, input) {
   cells.forEach((cell, index) => {
     setTimeout(() => {
-      cell.dataset.state = cellStates[index];
       updateCellAndKey(cell, keyboardKeys[input[index]], cellStates[index]);
       if (index === 4) {
         checkGameState(input);
@@ -229,29 +208,27 @@ function animateCells(cells, cellStates, input) {
 }
 
 function updateCellAndKey(cell, key, state) {
-  updateCellColor(cell);
+  const colors = { green: "#6aaa64", yellow: "#c9b458", gray: "#787c7e" };
+  const color = colors[state];
+
+  cell.style.backgroundColor = color;
+  cell.style.borderColor = color;
+  cell.style.color = "white";
+  cell.style.transform = "rotateX(360deg)";
+
   if (key) {
+    // Update keyboard key color only if it's an improvement
     if (
-      state === "correct" ||
-      (state === "present" && key.dataset.state !== "correct") ||
-      (state === "absent" &&
-        key.dataset.state !== "correct" &&
-        key.dataset.state !== "present")
+      state === "green" ||
+      (state === "yellow" && key.style.backgroundColor !== colors.green) ||
+      (state === "gray" &&
+        key.style.backgroundColor !== colors.green &&
+        key.style.backgroundColor !== colors.yellow)
     ) {
-      key.dataset.state = state;
-      updateKeyColor(key);
+      key.style.backgroundColor = color;
+      key.style.color = "white";
     }
   }
-}
-
-function updateCellColor(cell) {
-  const state = cell.dataset.state;
-  cell.className = `cell ${state}`;
-}
-
-function updateKeyColor(key) {
-  const state = key.dataset.state;
-  key.className = `key ${state}`;
 }
 
 function checkGameState(input) {
@@ -278,6 +255,7 @@ function checkGameState(input) {
 }
 
 function showNewGamePopup(message, isTemporary = false, title = "") {
+  // Remove any existing popup
   const existingPopup = document.getElementById("newGamePopup");
   if (existingPopup) {
     existingPopup.remove();
@@ -288,7 +266,18 @@ function showNewGamePopup(message, isTemporary = false, title = "") {
 
   if (isTemporary) {
     popup.innerHTML = `<div class="popup-content"><p>${message}</p></div>`;
-    popup.classList.add("temporary");
+    popup.style.cssText = `
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      z-index: 1000;
+    `;
     document.body.appendChild(popup);
     setTimeout(() => {
       popup.remove();
@@ -302,7 +291,59 @@ function showNewGamePopup(message, isTemporary = false, title = "") {
         <p>Press ENTER to start a new game</p>
       </div>
     `;
+    popup.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    `;
 
+    const style = document.createElement("style");
+    style.textContent = `
+      .popup-content {
+        background-color: #121213;
+        color: #ffffff;
+        padding: 24px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 90%;
+        width: 300px;
+      }
+      .popup-content h2 {
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+      .popup-content p {
+        font-size: 18px;
+        margin-bottom: 24px;
+      }
+      .popup-content strong {
+        color: #6aaa64;
+      }
+      #newGameButton {
+        background-color: #538d4e;
+        color: #ffffff;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 16px;
+      }
+      #newGameButton:hover {
+        background-color: #6aaa64;
+      }
+    `;
+
+    document.head.appendChild(style);
     document.body.appendChild(popup);
 
     document.getElementById("newGameButton").addEventListener("click", () => {
