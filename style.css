@@ -31,12 +31,14 @@ body.night-mode {
 .cell {
   width: 90px;
   height: 90px;
-  border: 1px solid #d3d6da;
+  border: 2px solid #d3d6da;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.8em;
-  transition: transform 1.5s, background-color 1.5s, border-color 0.3s;
+  font-weight: bold;
+  transition: transform 0.3s, background-color 0.3s, border-color 0.3s,
+    color 0.3s;
   transform-style: preserve-3d;
   margin: 4.5px;
   border-radius: 4.5px;
@@ -46,10 +48,37 @@ body.night-mode {
   border-color: #3a3a3c;
 }
 
-input#wordInput {
-  margin-top: 18px;
-  font-size: 1.35em;
-  text-align: center;
+.cell.correct {
+  background-color: #6aaa64;
+  border-color: #6aaa64;
+  color: #ffffff;
+}
+
+.cell.present {
+  background-color: #c9b458;
+  border-color: #c9b458;
+  color: #ffffff;
+}
+
+.cell.absent {
+  background-color: #787c7e;
+  border-color: #787c7e;
+  color: #ffffff;
+}
+
+.night-mode .cell.correct {
+  background-color: #538d4e;
+  border-color: #538d4e;
+}
+
+.night-mode .cell.present {
+  background-color: #b59f3b;
+  border-color: #b59f3b;
+}
+
+.night-mode .cell.absent {
+  background-color: #3a3a3c;
+  border-color: #3a3a3c;
 }
 
 .keyboard {
@@ -72,6 +101,7 @@ input#wordInput {
   height: 54px;
   margin: 4.5px;
   font-size: 21.6px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,6 +114,33 @@ input#wordInput {
 .night-mode .key {
   background-color: #818384;
   color: #f0f0f0;
+}
+
+.key.correct {
+  background-color: #6aaa64;
+  color: #ffffff;
+}
+
+.key.present {
+  background-color: #c9b458;
+  color: #ffffff;
+}
+
+.key.absent {
+  background-color: #787c7e;
+  color: #ffffff;
+}
+
+.night-mode .key.correct {
+  background-color: #538d4e;
+}
+
+.night-mode .key.present {
+  background-color: #b59f3b;
+}
+
+.night-mode .key.absent {
+  background-color: #3a3a3c;
 }
 
 #enter {
@@ -182,9 +239,67 @@ input:checked + .slider:before {
   background-color: #1a7bd0;
 }
 
-.night-mode #newGamePopup .popup-content {
+#newGamePopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#newGamePopup.temporary {
+  background-color: transparent;
+}
+
+.popup-content {
+  background-color: #ffffff;
+  color: #121213;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 90%;
+  width: 300px;
+}
+
+.night-mode .popup-content {
   background-color: #1a1a1b;
   color: #ffffff;
+}
+
+.popup-content h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.popup-content p {
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+.popup-content strong {
+  color: #6aaa64;
+}
+
+#newGameButton {
+  background-color: #6aaa64;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 16px;
+}
+
+#newGameButton:hover {
+  background-color: #538d4e;
 }
 
 .night-mode #newGameButton {
@@ -193,4 +308,17 @@ input:checked + .slider:before {
 
 .night-mode #newGameButton:hover {
   background-color: #6aaa64;
+}
+
+.temporary .popup-content {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.night-mode .temporary .popup-content {
+  background-color: rgba(255, 255, 255, 0.7);
+  color: black;
 }
