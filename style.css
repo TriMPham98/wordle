@@ -138,21 +138,21 @@ input#wordInput {
 /* Small Mobile Styles */
 @media only screen and (max-width: 320px) {
   .cell {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
     font-size: 1em;
     margin: 2px;
   }
 
   .key {
     width: 24px;
-    height: 35px;
+    height: 32px;
     font-size: 12px;
     margin: 1px;
   }
 
   #enter {
-    width: 80px;
-    height: 35px;
+    width: 76px;
+    height: 32px;
   }
 }
