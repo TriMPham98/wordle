@@ -87,21 +87,21 @@ input#wordInput {
 /* Tablet Styles */
 @media only screen and (max-width: 768px) {
   .cell {
-    width: 60px;
-    height: 60px;
+    width: 91px;
+    height: 91px;
     font-size: 1.5em;
   }
 
   .key {
-    width: 35px;
-    height: 45px;
+    width: 45px;
+    height: 55px;
     font-size: 18px;
     margin: 3px;
   }
 
   #enter {
-    width: 120px;
-    height: 45px;
+    width: 147px;
+    height: 55px;
   }
 }
 
