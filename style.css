@@ -55,8 +55,6 @@ input#wordInput {
 }
 
 .key {
-  /* background-color: #818384; */
-  /* color: #f0f0f0; */
   width: 41.4px;
   height: 54px;
   margin: 4.5px;
@@ -78,22 +76,83 @@ input#wordInput {
   animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
 }
+
 @keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Tablet Styles */
+@media only screen and (max-width: 768px) {
+  .cell {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5em;
   }
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
+
+  .key {
+    width: 35px;
+    height: 45px;
+    font-size: 18px;
+    margin: 3px;
   }
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
+
+  #enter {
+    width: 120px;
+    height: 45px;
   }
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 480px) {
+  .cell {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2em;
+    margin: 3px;
+  }
+
+  .key {
+    width: 28px;
+    height: 40px;
+    font-size: 14px;
+    margin: 2px;
+  }
+
+  #enter {
+    width: 90px;
+    height: 40px;
+  }
+
+  .keyboard {
+    margin-top: 12px;
+  }
+
+  .keyboard-row {
+    margin-bottom: 6px;
+  }
+}
+
+/* Small Mobile Styles */
+@media only screen and (max-width: 320px) {
+  .cell {
+    width: 40px;
+    height: 40px;
+    font-size: 1em;
+    margin: 2px;
+  }
+
+  .key {
+    width: 24px;
+    height: 35px;
+    font-size: 12px;
+    margin: 1px;
+  }
+
+  #enter {
+    width: 80px;
+    height: 35px;
   }
 }
