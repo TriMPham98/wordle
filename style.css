@@ -108,8 +108,8 @@ input#wordInput {
 /* Mobile Styles */
 @media only screen and (max-width: 480px) {
   .cell {
-    width: 45px;
-    height: 45px;
+    width: 56px;
+    height: 56px;
     font-size: 1.2em;
     margin: 3px;
   }
