@@ -287,8 +287,12 @@ function showNewGamePopup(message, isTemporary = false, title = "") {
       <div class="popup-content">
         <h2>${title}</h2>
         <p>${message}</p>
+        ${
+          window.innerWidth > 768
+            ? "<p>Press ENTER to start a new game</p>"
+            : ""
+        }
         <button id="newGameButton">Play Again</button>
-        <p>Press ENTER to start a new game</p>
       </div>
     `;
     popup.style.cssText = `
