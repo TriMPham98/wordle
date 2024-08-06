@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 function startNewGame() {
   // Pick a random word from common words
   TEST_WORD = commonWords[Math.floor(Math.random() * commonWords.length)];
-  console.log("Test Word:", TEST_WORD);
+  // console.log("Test Word:", TEST_WORD);
 
   // Reset game state
   currentGuess = 1;
@@ -159,7 +159,7 @@ function handleEnter() {
       shakeRow(rowClass);
     }
   } else {
-    console.log("Please enter a 5-letter word.");
+    // console.log("Please enter a 5-letter word.");
     shakeRow(rowClass);
   }
 }
@@ -233,7 +233,7 @@ function updateCellAndKey(cell, key, state) {
 
 function checkGameState(input) {
   if (input === TEST_WORD) {
-    console.log("Correct! You've won the game!");
+    // console.log("Correct! You've won the game!");
     showNewGamePopup(
       `Congratulations, you've guessed the word in ${currentGuess} ${
         currentGuess === 1 ? "try" : "tries"
@@ -243,12 +243,12 @@ function checkGameState(input) {
     );
     gameOver = true;
   } else {
-    console.log("Incorrect. Try again.");
+    // console.log("Incorrect. Try again.");
   }
 
   currentGuess++;
   if (currentGuess > 6 && input !== TEST_WORD) {
-    console.log("Game over. The word was: " + TEST_WORD);
+    // console.log("Game over. The word was: " + TEST_WORD);
     showNewGamePopup(`The word was: ${TEST_WORD}`, false, "Game over!");
     gameOver = true;
   }
